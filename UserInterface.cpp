@@ -2,6 +2,8 @@
 
 #include <fstream>
 #include <string>
+#include <thread>
+#include <chrono>
 
 void UserInterface::GetMenu() const
 {
@@ -41,7 +43,6 @@ void UserInterface::PrintBuffer()
 void UserInterface::HandleInput()
 {
 	char input{}; // til input fra brugeren
-	char buffer[10]; // buffer til UART fra Arduino
 
 	std::cout << "Input: ";
 	std::cin >> input;
@@ -55,14 +56,10 @@ void UserInterface::HandleInput()
 	case 'l':
 	case 'L':
 		m_Serial->SendData(&input, 1);
-		m_Serial->ReadDataWaiting();
+		m_Serial->ReadDataWaiting(); 
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		m_Serial->ReadData(&m_Buffer, 10);
-		//m_Buffer[9] = 0; //temp null terminering af buffer
 		PrintBuffer();
-		/*for (int i = 0; i < 10; i++)
-		{
-			std::cout << (int)buffer[i] << "\n";
-		}*/
 		break;
 	case 'q':
 	case 'Q':

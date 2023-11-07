@@ -142,7 +142,7 @@ int CSerial::ReadData(void* buffer, int limit)
 
 	if (!m_bOpened || m_hIDComDev == NULL)
 	{
-		std::cout << "Could not open data\n";
+		//std::cout << "Could not open data\n";
 		return(0);
 	}
 
@@ -153,7 +153,7 @@ int CSerial::ReadData(void* buffer, int limit)
 	ClearCommError(m_hIDComDev, &dwErrorFlags, &ComStat);
 	if (!ComStat.cbInQue)
 	{
-		std::cout << "No cbInQue\n";
+		//std::cout << "No cbInQue\n";
 		return(0);
 	}
 
@@ -161,23 +161,23 @@ int CSerial::ReadData(void* buffer, int limit)
 	if (limit < (int)dwBytesRead)
 	{
 		dwBytesRead = (DWORD)limit;
-		std::cout << "Limit reached\n";
+		//std::cout << "Limit reached\n";
 	}
 
 	bReadStatus = ReadFile(m_hIDComDev, buffer, dwBytesRead, &dwBytesRead, &m_OverlappedRead);
 	if (!bReadStatus)
 	{
-		std::cout << "!bReadStatus\n";
+		//std::cout << "!bReadStatus\n";
 		if (GetLastError() == ERROR_IO_PENDING)
 		{
 			WaitForSingleObject(m_OverlappedRead.hEvent, 2000);
-			std::cout << "dderror\n";
+			//std::cout << "dderror\n";
 			return((int)dwBytesRead);
 		}
-		std::cout << "Could not read file...\n";
+		//std::cout << "Could not read file...\n";
 		return(0);
 	}
-	std::cout << "Data read!\n";
+	//std::cout << "Data read!\n";
 
 	return((int)dwBytesRead);
 
