@@ -9,6 +9,8 @@ int main()
 
 	UI.GetMenu();
 
+	//Axel er sej, Andreas er mindre sej 
+
 	while (UI.isRunning())
 	{
 		UI.HandleInput();
