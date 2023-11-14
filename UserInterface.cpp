@@ -30,6 +30,21 @@ void UserInterface::ReadLog() const
 	log.close();
 }
 
+void UserInterface::ChangeThreshold()
+{
+	float input{};
+	std::cout << "Enter new temperature threshold: ";
+	std::cin >> input;
+
+	//TODO check for valid input
+
+	char buffer[10];
+
+	snprintf(buffer, sizeof(buffer), "%f", input);
+
+	m_Serial->SendData(buffer, 9);
+}
+
 void UserInterface::PrintBuffer()
 {
 	for (int i = 0, l = m_Buffer.size(); i < l; i++)
@@ -51,11 +66,11 @@ void UserInterface::HandleInput()
 	{
 	case 'a':
 	case 'A':
-		m_Serial->SendData(&input, 1);
+		m_Serial->SendData(&input, 9);
 		break;
 	case 'l':
 	case 'L':
-		m_Serial->SendData(&input, 1);
+		m_Serial->SendData(&input, 9);
 		m_Serial->ReadDataWaiting(); 
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		m_Serial->ReadData(&m_Buffer, 10);
@@ -65,10 +80,22 @@ void UserInterface::HandleInput()
 	case 'Q':
 		m_Running = false;
 		break;
+	case 'n':
+	case 'N':
+		m_Serial->SendData(&input, 9);
+		ChangeThreshold();
+		break;
 	case 'm':
 	case 'M':
 		GetMenu();
 		break;
+	case 'r':
+	case 'R':
+		m_Serial->SendData(&input, 9);
+		m_Serial->ReadDataWaiting();
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		m_Serial->ReadData(&m_Buffer, 10);
+		PrintBuffer();
 	default:
 		break;
 	}

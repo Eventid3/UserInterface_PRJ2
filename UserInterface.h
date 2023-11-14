@@ -35,6 +35,7 @@ public:
 
 	void GetMenu() const;
 	void ReadLog() const;
+	void ChangeThreshold();
 
 	void PrintBuffer();
 
