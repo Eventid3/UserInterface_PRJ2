@@ -38,6 +38,7 @@ public:
 	void ChangeThreshold();
 
 	void PrintBuffer();
+	void ClearBuffer();
 
 	bool isRunning() const { return m_Running; }
 

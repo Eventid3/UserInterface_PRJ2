@@ -9,10 +9,12 @@ void UserInterface::GetMenu() const
 {
 	std::cout << "*** USER INTERFACE***\n";
 	std::cout << "OPTIONS:\n";
-	std::cout << "Toggle led?  Enter 'a'\n";
-	std::cout << "Read data?   Enter 'l'\n";
-	std::cout << "Get menu?    Enter 'm'\n";
-	std::cout << "Quit?        Enter 'q'\n";
+	std::cout << "Toggle led?                     Enter '1'\n";
+	std::cout << "Read current temperature?       Enter '2'\n";
+	std::cout << "Change temperature threshold?   Enter '3'\n";
+	std::cout << "Read temperature threshold?     Enter '4'\n";
+	std::cout << "Get menu?                       Enter '9'\n";
+	std::cout << "Quit?                           Enter '0'\n";
 	std::cout << std::endl;
 }
 
@@ -41,8 +43,8 @@ void UserInterface::ChangeThreshold()
 	char buffer[10];
 
 	snprintf(buffer, sizeof(buffer), "%f", input);
-
-	m_Serial->SendData(buffer, 9);
+	std::cout << buffer << std::endl;
+	m_Serial->SendData(buffer, 10);
 }
 
 void UserInterface::PrintBuffer()
@@ -52,6 +54,11 @@ void UserInterface::PrintBuffer()
 		std::cout << m_Buffer[i];
 	}
 	std::cout << std::endl;
+}
+
+void UserInterface::ClearBuffer()
+{
+	m_Buffer.fill(0);
 }
 
 
@@ -64,38 +71,35 @@ void UserInterface::HandleInput()
 
 	switch (input)
 	{
-	case 'a':
-	case 'A':
-		m_Serial->SendData(&input, 9);
+	case '1':
+		m_Serial->SendData(&input, 1);
 		break;
-	case 'l':
-	case 'L':
-		m_Serial->SendData(&input, 9);
+	case '2':
+		m_Serial->SendData(&input, 1);
 		m_Serial->ReadDataWaiting(); 
+		ClearBuffer();
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		m_Serial->ReadData(&m_Buffer, 10);
 		PrintBuffer();
 		break;
-	case 'q':
-	case 'Q':
-		m_Running = false;
-		break;
-	case 'n':
-	case 'N':
-		m_Serial->SendData(&input, 9);
+	case '3':
+		m_Serial->SendData(&input, 1);
 		ChangeThreshold();
 		break;
-	case 'm':
-	case 'M':
-		GetMenu();
-		break;
-	case 'r':
-	case 'R':
-		m_Serial->SendData(&input, 9);
+	case '4':
+		m_Serial->SendData(&input, 1);
 		m_Serial->ReadDataWaiting();
+		ClearBuffer();
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		m_Serial->ReadData(&m_Buffer, 10);
 		PrintBuffer();
+		break;
+	case '9':
+		GetMenu();
+		break;
+	case '0':
+		m_Running = false;
+		break;
 	default:
 		break;
 	}
