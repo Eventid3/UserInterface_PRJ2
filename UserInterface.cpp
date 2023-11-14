@@ -5,9 +5,11 @@
 #include <thread>
 #include <chrono>
 
+#define CLEAR_SCREEN "\033[2J\033[1;1H" 
+
 void UserInterface::GetMenu() const
 {
-	std::cout << "*** USER INTERFACE***\n";
+	std::cout << "************ USER INTERFACE ************\n\n";
 	std::cout << "OPTIONS:\n";
 	std::cout << "Toggle led?                     Enter '1'\n";
 	std::cout << "Read current temperature?       Enter '2'\n";
@@ -71,20 +73,32 @@ void UserInterface::HandleInput()
 
 	switch (input)
 	{
-	case '1':
+	case '1': //LED toggle til debugging
 		m_Serial->SendData(&input, 1);
+
+		std::cout << CLEAR_SCREEN;
+		GetMenu();
+		std::cout << "LED Toggled\n";
 		break;
-	case '2':
+	case '2': // temp reading
 		m_Serial->SendData(&input, 1);
 		m_Serial->ReadDataWaiting(); 
 		ClearBuffer();
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		m_Serial->ReadData(&m_Buffer, 10);
+
+		std::cout << CLEAR_SCREEN;
+		GetMenu();
+		std::cout << "Current temperature: ";
 		PrintBuffer();
 		break;
 	case '3':
 		m_Serial->SendData(&input, 1);
 		ChangeThreshold();
+
+		std::cout << CLEAR_SCREEN;
+		GetMenu();
+		std::cout << "Threshold set\n";
 		break;
 	case '4':
 		m_Serial->SendData(&input, 1);
@@ -92,6 +106,10 @@ void UserInterface::HandleInput()
 		ClearBuffer();
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		m_Serial->ReadData(&m_Buffer, 10);
+
+		std::cout << CLEAR_SCREEN;
+		GetMenu();
+		std::cout << "Current temperature threshold: ";
 		PrintBuffer();
 		break;
 	case '9':
