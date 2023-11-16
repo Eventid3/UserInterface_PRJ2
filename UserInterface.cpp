@@ -4,9 +4,13 @@
 #include <string>
 #include <thread>
 #include <chrono>
+#include <iomanip>
+#include <ctime>
+#include <sstream>
 
 #define CLEAR_SCREEN "\033[2J\033[1;1H" 
-#define LOG ""
+#define LOG "log.txt"
+
 
 void UserInterface::GetMenu() const
 {
@@ -20,22 +24,57 @@ void UserInterface::GetMenu() const
 	std::cout << std::endl;
 }
 
+std::string UserInterface::GetCurrentDateTime()
+{
+	// Get the current time point
+	auto now = std::chrono::system_clock::now();
+
+	// Convert it to time_t
+	std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+
+	// Initialize a struct tm with the local time
+	std::tm localTimeInfo;
+	localtime_s(&localTimeInfo, &currentTime);
+
+	// Format the time as a string
+	std::stringstream ss;
+	ss << std::put_time(&localTimeInfo, "%d:%m:%Y %H:%M:%S");
+
+	return ss.str();
+}
+
 void UserInterface::LogEvents()
 {
-	std::ofstream log("log.txt");
+	// Open log in append mode
+	std::ofstream log(LOG, std::ios_base::app);
+	
+	// lock thread if 
 	{
-		std::unique_lock<std::mutex> lock(mutex_);
-		condition_.wait(lock, [&]() { return !pauseLogEvents_; });
+		std::unique_lock<std::mutex> lock(m_Mutex);
+		m_Condition.wait(lock, [&]() { return !m_PauseLogEvents; });
+		if (!m_Running)
+			return;  // Break out of the loop immediately
 	}
 
 	char c{ '2' };
 	m_Serial->SendData(&c, 1);
 	LoadTempToBuffer();
-	std::string logLine = "Temperature: " + BufferToString();
 
+	std::string logLine = GetCurrentDateTime() + ": Temperature: " + BufferToString();
+	
 	log << logLine << "\n";
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	for (auto i = 0; i < m_SleepDuration.count(); ++i)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		{
+			std::unique_lock<std::mutex> lock(m_Mutex);
+			m_Condition.wait_for(lock, std::chrono::milliseconds(1), [&]() { return !m_PauseLogEvents; });
+			if (!m_Running) {
+				return;  // Break out of the loop immediately
+			}
+		}
+	}
 
 	log.close();
 }
@@ -44,7 +83,7 @@ void UserInterface::ReadLog() const
 {
 	std::string logLine;
 
-	std::ifstream log("log.txt");
+	std::ifstream log(LOG);
 
 	while (std::getline(log, logLine)) 
 	{
@@ -130,17 +169,17 @@ void UserInterface::HandleInput()
 		break;
 	case '3':
 		{
-		std::lock_guard<std::mutex> lock(mutex_);
-		pauseLogEvents_ = true;
-		condition_.notify_one();
+		std::lock_guard<std::mutex> lock(m_Mutex);
+		m_PauseLogEvents = true;
+		m_Condition.notify_one();
 		}
 		m_Serial->SendData(&input, 1);
 		ChangeThreshold();
 
 		{
-			std::lock_guard<std::mutex> lock(mutex_);
-			pauseLogEvents_ = false;
-			condition_.notify_one();
+			std::lock_guard<std::mutex> lock(m_Mutex);
+			m_PauseLogEvents = false;
+			m_Condition.notify_one();
 		}
 
 		std::cout << CLEAR_SCREEN;
@@ -160,6 +199,7 @@ void UserInterface::HandleInput()
 		PrintBuffer();
 		break;
 	case '0':
+		m_SleepDuration = std::chrono::milliseconds(0);
 		m_Running = false;
 		break;
 	default:
