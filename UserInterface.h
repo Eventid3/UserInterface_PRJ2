@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <array>
+#include <mutex>
+#include <condition_variable>
 
 class UserInterface
 {
@@ -34,15 +36,19 @@ public:
 	}
 
 	void GetMenu() const;
+	void LogEvents();
 	void ReadLog() const;
-	void ChangeThreshold();
 
 	void PrintBuffer();
 	void ClearBuffer();
+	std::string BufferToString();
 
 	bool isRunning() const { return m_Running; }
 
 	void HandleInput();
+	void ChangeThreshold();
+
+	void LoadTempToBuffer();
 
 	CSerial* Serial() { return m_Serial; }
 
@@ -52,5 +58,9 @@ private:
 	bool m_Running;
 
 	std::array<char, 10> m_Buffer;
+
+	std::mutex mutex_;
+	std::condition_variable condition_;
+	bool pauseLogEvents_ = false;
 
 };
