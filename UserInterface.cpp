@@ -24,9 +24,18 @@ void UserInterface::GetMenu() const
 	std::cout << std::endl;
 }
 
+
+void UserInterface::ResetUI(const std::string& message) const
+{
+	std::cout << CLEAR_SCREEN;
+	GetMenu();
+	std::cout << message;
+}
+
+
 std::string UserInterface::GetCurrentDateTime()
 {
-	// Get the current time point
+	// Time since epoch
 	auto now = std::chrono::system_clock::now();
 
 	// Convert it to time_t
@@ -43,41 +52,29 @@ std::string UserInterface::GetCurrentDateTime()
 	return ss.str();
 }
 
+
 void UserInterface::LogEvents()
 {
 	// Open log in append mode
 	std::ofstream log(LOG, std::ios_base::app);
-	
-	// lock thread if 
+
 	{
-		std::unique_lock<std::mutex> lock(m_Mutex);
-		m_Condition.wait(lock, [&]() { return !m_PauseLogEvents; });
-		if (!m_Running)
-			return;  // Break out of the loop immediately
+		std::lock_guard<std::mutex> lock(m_Mutex);
+		char c{ '2' };
+		m_Serial->SendData(&c, 1);
+		LoadRecievedDataToBuffer();
 	}
 
-	char c{ '2' };
-	m_Serial->SendData(&c, 1);
-	LoadTempToBuffer();
-
-	std::string logLine = GetCurrentDateTime() + ": Temperature: " + BufferToString();
-	
-	log << logLine << "\n";
+	log << GetCurrentDateTime() + ": Temperature: " + BufferToString() << "\n";
 
 	for (auto i = 0; i < m_SleepDuration.count(); ++i)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		{
-			std::unique_lock<std::mutex> lock(m_Mutex);
-			m_Condition.wait_for(lock, std::chrono::milliseconds(1), [&]() { return !m_PauseLogEvents; });
-			if (!m_Running) {
-				return;  // Break out of the loop immediately
-			}
-		}
 	}
 
 	log.close();
 }
+
 
 void UserInterface::ReadLog() const
 {
@@ -92,6 +89,7 @@ void UserInterface::ReadLog() const
 
 	log.close();
 }
+
 
 void UserInterface::ChangeThreshold()
 {
@@ -108,13 +106,15 @@ void UserInterface::ChangeThreshold()
 	m_Serial->SendData(buffer, 10);
 }
 
-void UserInterface::LoadTempToBuffer()
+
+void UserInterface::LoadRecievedDataToBuffer()
 {	
 	m_Serial->ReadDataWaiting();
 	ClearBuffer();
 	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	m_Serial->ReadData(&m_Buffer, 10);
 }
+
 
 void UserInterface::PrintBuffer()
 {
@@ -125,10 +125,12 @@ void UserInterface::PrintBuffer()
 	std::cout << std::endl;
 }
 
+
 void UserInterface::ClearBuffer()
 {
 	m_Buffer.fill(0);
 }
+
 
 std::string UserInterface::BufferToString()
 {
@@ -154,58 +156,44 @@ void UserInterface::HandleInput()
 	case '1': //LED toggle til debugging
 		m_Serial->SendData(&input, 1);
 
-		std::cout << CLEAR_SCREEN;
-		GetMenu();
-		std::cout << "LED Toggled\n";
+		ResetUI("LED Toggled\n");
 		break;
+
 	case '2': // temp reading
 		m_Serial->SendData(&input, 1);
-		LoadTempToBuffer();
 
-		std::cout << CLEAR_SCREEN;
-		GetMenu();
-		std::cout << "Current temperature: ";
+		LoadRecievedDataToBuffer();
+
+		ResetUI("Current temperature: ");
 		PrintBuffer();
 		break;
-	case '3':
-		{
-		std::lock_guard<std::mutex> lock(m_Mutex);
-		m_PauseLogEvents = true;
-		m_Condition.notify_one();
-		}
-		m_Serial->SendData(&input, 1);
-		ChangeThreshold();
 
+	case '3': // Enter new threshold
 		{
 			std::lock_guard<std::mutex> lock(m_Mutex);
-			m_PauseLogEvents = false;
-			m_Condition.notify_one();
+			m_Serial->SendData(&input, 1);
+			ChangeThreshold();
 		}
 
-		std::cout << CLEAR_SCREEN;
-		GetMenu();
-		std::cout << "Threshold set\n";
+		ResetUI("New threshold set!\n");
 		break;
-	case '4':
-		m_Serial->SendData(&input, 1);
-		m_Serial->ReadDataWaiting();
-		ClearBuffer();
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-		m_Serial->ReadData(&m_Buffer, 10);
 
-		std::cout << CLEAR_SCREEN;
-		GetMenu();
-		std::cout << "Current temperature threshold: ";
+	case '4': // Get Current threshold
+		m_Serial->SendData(&input, 1);
+
+		LoadRecievedDataToBuffer();
+
+		ResetUI("Current temperature threshold: ");
 		PrintBuffer();
 		break;
-	case '0':
+
+	case '0': // Terminate program
 		m_SleepDuration = std::chrono::milliseconds(0);
 		m_Running = false;
 		break;
-	default:
-		std::cout << CLEAR_SCREEN;
-		GetMenu();
-		std::cout << "Invalid input...\n";
+
+	default: 
+		ResetUI("Invalid input...\n");
 		break;
 	}
 }

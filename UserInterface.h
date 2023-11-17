@@ -6,8 +6,6 @@
 #include <mutex>
 #include <condition_variable>
 
-#define TIME_BETWEEN_LOGS 10000
-
 class UserInterface
 {
 public:
@@ -38,6 +36,7 @@ public:
 	}
 
 	void GetMenu() const;
+	void ResetUI(const std::string& message) const;
 	void LogEvents();
 	void ReadLog() const;
 	std::string GetCurrentDateTime();
@@ -51,21 +50,15 @@ public:
 	void HandleInput();
 	void ChangeThreshold();
 
-	void LoadTempToBuffer();
+	void LoadRecievedDataToBuffer();
 
 	CSerial* Serial() { return m_Serial; }
 
 private:
-	CSerial* m_Serial;
-
+	CSerial* m_Serial; // UART communication
 	bool m_Running;
-
-	std::array<char, 10> m_Buffer;
-
-	std::mutex m_Mutex;
-	std::condition_variable m_Condition;
-	bool m_PauseLogEvents = false;
-
-	std::chrono::milliseconds m_SleepDuration{ TIME_BETWEEN_LOGS };
+	std::array<char, 10> m_Buffer; //buffer for recieved data
+	std::mutex m_Mutex; // mutex for handeling multithreading
+	std::chrono::milliseconds m_SleepDuration{ 1000 }; // time between logs
 
 };
