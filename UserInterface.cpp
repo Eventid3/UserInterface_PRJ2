@@ -16,10 +16,9 @@ void UserInterface::GetMenu() const
 {
 	std::cout << "************ USER INTERFACE ************\n\n";
 	std::cout << "OPTIONS:\n";
-	std::cout << "Toggle led?                     Enter '1'\n";
-	std::cout << "Read current temperature?       Enter '2'\n";
-	std::cout << "Change temperature threshold?   Enter '3'\n";
-	std::cout << "Read temperature threshold?     Enter '4'\n";
+	std::cout << "Read current temperature?       Enter '1'\n";
+	std::cout << "Change temperature threshold?   Enter '2'\n";
+	std::cout << "Read temperature threshold?     Enter '3'\n";
 	std::cout << "Quit?                           Enter '0'\n";
 	std::cout << std::endl;
 }
@@ -60,7 +59,7 @@ void UserInterface::LogEvents()
 
 	{
 		std::lock_guard<std::mutex> lock(m_Mutex);
-		char c{ '2' };
+		char c{ '1' };
 		m_Serial->SendData(&c, 1);
 		LoadRecievedDataToBuffer();
 	}
@@ -153,13 +152,8 @@ void UserInterface::HandleInput()
 
 	switch (input)
 	{
-	case '1': //LED toggle til debugging
-		m_Serial->SendData(&input, 1);
 
-		ResetUI("LED Toggled\n");
-		break;
-
-	case '2': // temp reading
+	case '1': // temp reading
 		m_Serial->SendData(&input, 1);
 
 		LoadRecievedDataToBuffer();
@@ -168,7 +162,7 @@ void UserInterface::HandleInput()
 		PrintBuffer();
 		break;
 
-	case '3': // Enter new threshold
+	case '2': // Enter new threshold
 		{
 			std::lock_guard<std::mutex> lock(m_Mutex);
 			m_Serial->SendData(&input, 1);
@@ -178,7 +172,7 @@ void UserInterface::HandleInput()
 		ResetUI("New threshold set!\n");
 		break;
 
-	case '4': // Get Current threshold
+	case '3': // Get Current threshold
 		m_Serial->SendData(&input, 1);
 
 		LoadRecievedDataToBuffer();
