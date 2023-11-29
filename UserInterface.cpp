@@ -14,19 +14,19 @@
 
 void UserInterface::GetMenu() const
 {
-	std::cout << "************ USER INTERFACE ************\n\n";
-	std::cout << "OPTIONS:\n";
-	std::cout << "Read current temperature?       Enter '1'\n";
-	std::cout << "Change temperature threshold?   Enter '2'\n";
-	std::cout << "Read temperature threshold?     Enter '3'\n";
-	std::cout << "Quit?                           Enter '0'\n";
-	std::cout << std::endl;
+	m_Os << "************ USER INTERFACE ************\n\n";
+	m_Os << "OPTIONS:\n";
+	m_Os << "Read current temperature?       Enter '1'\n";
+	m_Os << "Change temperature threshold?   Enter '2'\n";
+	m_Os << "Read temperature threshold?     Enter '3'\n";
+	m_Os << "Quit?                           Enter '0'\n";
+	m_Os << std::endl;
 }
 
 
 void UserInterface::ResetUI(const std::string& message) const
 {
-	std::cout << CLEAR_SCREEN;
+	m_Os << CLEAR_SCREEN;
 	GetMenu();
 	std::cout << message;
 }
@@ -83,7 +83,7 @@ void UserInterface::ReadLog() const
 
 	while (std::getline(log, logLine)) 
 	{
-		std::cout << logLine << "\n";
+		m_Os << logLine << "\n";
 	}
 
 	log.close();
@@ -93,7 +93,7 @@ void UserInterface::ReadLog() const
 void UserInterface::ChangeThreshold()
 {
 	float input{};
-	std::cout << "Enter new temperature threshold: ";
+	m_Os << "Enter new temperature threshold: ";
 	std::cin >> input;
 
 	//TODO check for valid input
@@ -101,7 +101,7 @@ void UserInterface::ChangeThreshold()
 	char buffer[10];
 
 	snprintf(buffer, sizeof(buffer), "%f", input);
-	std::cout << buffer << std::endl;
+	m_Os << buffer << std::endl;
 	m_Serial->SendData(buffer, 10);
 }
 
@@ -119,9 +119,9 @@ void UserInterface::PrintBuffer()
 {
 	for (int i = 0, l = m_Buffer.size(); i < l; i++)
 	{
-		std::cout << m_Buffer[i];
+		m_Os << m_Buffer[i];
 	}
-	std::cout << std::endl;
+	m_Os << std::endl;
 }
 
 
@@ -147,7 +147,7 @@ void UserInterface::HandleInput()
 {
 	char input{}; // til input fra brugeren
 
-	std::cout << "Input: ";
+	m_Os << "Input: ";
 	std::cin >> input;
 
 	switch (input)

@@ -26,7 +26,7 @@ void logging(UserInterface* ui)
 
 int main()
 {
-	UserInterface UI(PORT, BAUD);
+	UserInterface UI(PORT, BAUD, std::cout);
 
 	std::thread inputThread(handleInput, &UI);
 	std::thread logThread(logging, &UI);

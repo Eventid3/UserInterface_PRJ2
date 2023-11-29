@@ -10,19 +10,19 @@ class UserInterface
 {
 public:
 	// Constructor
-	UserInterface(int port, int baud)
+	UserInterface(int port, int baud, std::ostream& os) : m_Os(os)
 	{
 		m_Serial = new CSerial();
 
 		if (!m_Serial->Open(port, baud))
 		{
-			std::cout << "Could not open COM" << port << std::endl;
+			m_Os << "Could not open COM" << port << std::endl;
 			delete m_Serial;
 			exit(-1);
 		}
 		else
 		{
-			std::cout << "Serial communication opened on Port " << port << std::endl;
+			m_Os << "Serial communication opened on Port " << port << std::endl;
 		}
 
 		m_Buffer = { 0 };
@@ -61,4 +61,5 @@ private:
 	std::mutex m_Mutex; // mutex for handeling multithreading
 	std::chrono::milliseconds m_SleepDuration{ 1000 }; // time between logs
 
+	std::ostream& m_Os;
 };
