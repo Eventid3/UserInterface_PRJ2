@@ -1,0 +1,40 @@
+# ninja log v5
+122	7487	7233846187398762	GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+122	7487	7233846187398762	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+7489	18702	7233846309042912	CMakeFiles/GUI_semesterprojekt.dir/GUI_semesterprojekt_autogen/mocs_compilation.cpp.obj	6acba967b56272e3
+122	7487	7233846187398762	GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+122	7487	7233846187398762	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+7500	18652	7233846308557614	CMakeFiles/GUI_semesterprojekt.dir/main.cpp.obj	2a3db2b75b6b2ff1
+10880	11337	7233844858248600	GUI_semesterprojekt.exe	e277fca2111b61a6
+7509	19725	7233846319246362	CMakeFiles/GUI_semesterprojekt.dir/mainwindow.cpp.obj	68f4a9ec20650a3b
+4471	17106	7229748251183993	CMakeFiles/GUI_semesterprojekt.dir/Serial.cpp.obj	64868bbf2a33695a
+4426	17103	7229748249798501	CMakeFiles/GUI_semesterprojekt.dir/UserInterface.cpp.obj	db08daac7a83c029
+6012	12483	7230537258256173	CMakeFiles/GUI_semesterprojekt.dir/serial.cpp.obj	e29ada3cb6a8ed0c
+41	9499	7233846478721838	CMakeFiles/GUI_semesterprojekt.dir/GUI_semesterprojekt_autogen/mocs_compilation.cpp.obj	6acba967b56272e3
+58	10505	7233846488770263	CMakeFiles/GUI_semesterprojekt.dir/mainwindow.cpp.obj	68f4a9ec20650a3b
+10505	10925	7233846492908013	GUI_semesterprojekt.exe	e277fca2111b61a6
+26	540	7233847769648907	GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+26	540	7233847769648907	GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+26	540	7233847769648907	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+26	540	7233847769648907	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+597	9606	7233847860372664	CMakeFiles/GUI_semesterprojekt.dir/mainwindow.cpp.obj	68f4a9ec20650a3b
+9607	10047	7233847864682822	GUI_semesterprojekt.exe	e277fca2111b61a6
+39	3500	7233849647054296	GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+39	3500	7233849647054296	GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+39	3500	7233849647054296	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+39	3500	7233849647054296	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+38	6483	7233850083433978	GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+38	6483	7233850083433978	GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+38	6483	7233850083433978	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+38	6483	7233850083433978	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+6484	14563	7233850178235418	CMakeFiles/GUI_semesterprojekt.dir/GUI_semesterprojekt_autogen/mocs_compilation.cpp.obj	6acba967b56272e3
+6505	14596	7233850178561537	CMakeFiles/GUI_semesterprojekt.dir/main.cpp.obj	2a3db2b75b6b2ff1
+38	414	7233850618663085	GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+38	414	7233850618663085	GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+38	414	7233850618663085	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+38	414	7233850618663085	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+460	7863	7233850693183243	CMakeFiles/GUI_semesterprojekt.dir/GUI_semesterprojekt_autogen/mocs_compilation.cpp.obj	6acba967b56272e3
+67	730	7233853654907702	GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+67	730	7233853654907702	GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
+67	730	7233853654907702	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/timestamp	d3b3484a1c4663d0
+67	730	7233853654907702	C:/Users/Sylvester/OneDrive - Aarhus universitet/AU/2.semester/UserInterface_PRJ2/build-GUI_semesterprojekt-Desktop_Qt_6_6_1_MinGW_64_bit-Debug/GUI_semesterprojekt_autogen/mocs_compilation.cpp	d3b3484a1c4663d0
