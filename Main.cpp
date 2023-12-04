@@ -1,9 +1,6 @@
 #include <thread>
 #include "UserInterface.h"
 
-#define PORT 6
-#define BAUD 9600
-
 void handleInput(UserInterface* ui)
 {
 	ui->GetMenu();
@@ -26,7 +23,7 @@ void logging(UserInterface* ui)
 
 int main()
 {
-	UserInterface UI(PORT, BAUD, std::cout);
+	UserInterface UI(5,9600,std::cout);
 
 	std::thread inputThread(handleInput, &UI);
 	std::thread logThread(logging, &UI);

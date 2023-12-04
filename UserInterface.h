@@ -12,18 +12,7 @@ public:
 	// Constructor
 	UserInterface(int port, int baud, std::ostream& os) : m_Os(os)
 	{
-		m_Serial = new CSerial();
-
-		if (!m_Serial->Open(port, baud))
-		{
-			m_Os << "Could not open COM" << port << std::endl;
-			delete m_Serial;
-			exit(-1);
-		}
-		else
-		{
-			m_Os << "Serial communication opened on Port " << port << std::endl;
-		}
+		Connect(port, baud);
 
 		m_Buffer = { 0 };
 		m_Running = true;
@@ -35,6 +24,8 @@ public:
 		delete m_Serial;
 	}
 
+	void Connect(int port, int baud);
+	void Reconnect();
 	void GetMenu() const;
 	void ResetUI(const std::string& message) const;
 	void LogEvents();
@@ -55,7 +46,7 @@ public:
 	CSerial* Serial() { return m_Serial; }
 
 private:
-	CSerial* m_Serial; // UART communication
+	CSerial* m_Serial = nullptr; // UART communication
 	bool m_Running;
 	std::array<char, 10> m_Buffer; //buffer for recieved data
 	std::mutex m_Mutex; // mutex for handeling multithreading

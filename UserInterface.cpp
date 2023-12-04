@@ -12,6 +12,36 @@
 #define LOG "log.txt"
 
 
+void UserInterface::Connect(int port, int baud)
+{
+	if (m_Serial == nullptr)
+		delete m_Serial;
+
+	m_Serial = new CSerial();
+
+	if (!m_Serial->Open(port, baud))
+	{
+		m_Os << "Could not open COM" << port << std::endl;
+		delete m_Serial;
+	}
+	else
+	{
+		m_Os << "Serial communication opened on Port " << port << std::endl;
+	}
+}
+
+void UserInterface::Reconnect()
+{
+	int port, baud;
+	m_Os << "Enter new port: ";
+	std::cin >> port;
+
+	m_Os << "Enter new baudrate: ";
+	std::cin >> baud;
+
+	Connect(port, baud);
+}
+
 void UserInterface::GetMenu() const
 {
 	m_Os << "************ USER INTERFACE ************\n\n";
@@ -19,6 +49,7 @@ void UserInterface::GetMenu() const
 	m_Os << "Read current temperature?       Enter '1'\n";
 	m_Os << "Change temperature threshold?   Enter '2'\n";
 	m_Os << "Read temperature threshold?     Enter '3'\n";
+	m_Os << "Reconnect serial deivce?        Enter '9'\n";
 	m_Os << "Quit?                           Enter '0'\n";
 	m_Os << std::endl;
 }
@@ -179,6 +210,19 @@ void UserInterface::HandleInput()
 
 		ResetUI("Current temperature threshold: ");
 		PrintBuffer();
+		break;
+
+	case '9': // reconnect serial device
+		int port, baud;
+		m_Os << "Enter new port: ";
+		std::cin >> port;
+
+		m_Os << "Enter new baudrate: ";
+		std::cin >> baud;
+
+		ResetUI("");
+		Connect(port, baud);
+
 		break;
 
 	case '0': // Terminate program
