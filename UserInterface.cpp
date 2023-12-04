@@ -14,15 +14,15 @@
 
 void UserInterface::Connect(int port, int baud)
 {
-	if (m_Serial == nullptr)
-		delete m_Serial;
+	if (m_SerialComm == nullptr)
+		delete m_SerialComm;
 
-	m_Serial = new CSerial();
+	m_SerialComm = new SerialCommunicator();
 
-	if (!m_Serial->Open(port, baud))
+	if (!m_SerialComm->Open(port, baud))
 	{
 		m_Os << "Could not open COM" << port << std::endl;
-		delete m_Serial;
+		delete m_SerialComm;
 	}
 	else
 	{
@@ -63,115 +63,115 @@ void UserInterface::ResetUI(const std::string& message) const
 }
 
 
-std::string UserInterface::GetCurrentDateTime()
-{
-	// Time since epoch
-	auto now = std::chrono::system_clock::now();
-
-	// Convert it to time_t
-	std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
-
-	// Initialize a struct tm with the local time
-	std::tm localTimeInfo;
-	localtime_s(&localTimeInfo, &currentTime);
-
-	// Format the time as a string
-	std::stringstream ss;
-	ss << std::put_time(&localTimeInfo, "%d:%m:%Y %H:%M:%S");
-
-	return ss.str();
-}
-
-
-void UserInterface::LogEvents()
-{
-	// Open log in append mode
-	std::ofstream log(LOG, std::ios_base::app);
-
-	{
-		std::lock_guard<std::mutex> lock(m_Mutex);
-		char c{ '1' };
-		m_Serial->SendData(&c, 1);
-		LoadRecievedDataToBuffer();
-	}
-
-	log << GetCurrentDateTime() + ": Temperature: " + BufferToString() << "\n";
-
-	for (auto i = 0; i < m_SleepDuration.count(); ++i)
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	}
-
-	log.close();
-}
+//std::string UserInterface::GetCurrentDateTime()
+//{
+//	// Time since epoch
+//	auto now = std::chrono::system_clock::now();
+//
+//	// Convert it to time_t
+//	std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+//
+//	// Initialize a struct tm with the local time
+//	std::tm localTimeInfo;
+//	localtime_s(&localTimeInfo, &currentTime);
+//
+//	// Format the time as a string
+//	std::stringstream ss;
+//	ss << std::put_time(&localTimeInfo, "%d:%m:%Y %H:%M:%S");
+//
+//	return ss.str();
+//}
 
 
-void UserInterface::ReadLog() const
-{
-	std::string logLine;
+//void UserInterface::LogEvents()
+//{
+//	// Open log in append mode
+//	std::ofstream log(LOG, std::ios_base::app);
+//
+//	{
+//		std::lock_guard<std::mutex> lock(m_Mutex);
+//		char c{ '1' };
+//		m_Serial->SendData(&c, 1);
+//		LoadRecievedDataToBuffer();
+//	}
+//
+//	log << GetCurrentDateTime() + ": Temperature: " + BufferToString() << "\n";
+//
+//	for (auto i = 0; i < m_SleepDuration.count(); ++i)
+//	{
+//		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+//	}
+//
+//	log.close();
+//}
 
-	std::ifstream log(LOG);
-
-	while (std::getline(log, logLine)) 
-	{
-		m_Os << logLine << "\n";
-	}
-
-	log.close();
-}
-
-
-void UserInterface::ChangeThreshold()
-{
-	float input{};
-	m_Os << "Enter new temperature threshold: ";
-	std::cin >> input;
-
-	//TODO check for valid input
-
-	char buffer[10];
-
-	snprintf(buffer, sizeof(buffer), "%f", input);
-	m_Os << buffer << std::endl;
-	m_Serial->SendData(buffer, 10);
-}
+//
+//void UserInterface::ReadLog() const
+//{
+//	std::string logLine;
+//
+//	std::ifstream log(LOG);
+//
+//	while (std::getline(log, logLine)) 
+//	{
+//		m_Os << logLine << "\n";
+//	}
+//
+//	log.close();
+//}
 
 
-void UserInterface::LoadRecievedDataToBuffer()
-{	
-	m_Serial->ReadDataWaiting();
-	ClearBuffer();
-	std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	m_Serial->ReadData(&m_Buffer, 10);
-}
+//void UserInterface::ChangeThreshold()
+//{
+//	float input{};
+//	m_Os << "Enter new temperature threshold: ";
+//	std::cin >> input;
+//
+//	//TODO check for valid input
+//
+//	char buffer[10];
+//
+//	snprintf(buffer, sizeof(buffer), "%f", input);
+//	m_Os << buffer << std::endl;
+//	m_Serial->SendData(buffer, 10);
+//}
+
+//
+//void UserInterface::LoadRecievedDataToBuffer()
+//{	
+//	m_Serial->ReadDataWaiting();
+//	ClearBuffer();
+//	std::this_thread::sleep_for(std::chrono::milliseconds(50));
+//	m_Serial->ReadData(&m_Buffer, 10);
+//}
 
 
 void UserInterface::PrintBuffer()
 {
-	for (int i = 0, l = m_Buffer.size(); i < l; i++)
+	for (int i = 0, l = m_SerialComm->GetBuffer()->size(); i < l; i++)
 	{
-		m_Os << m_Buffer[i];
+		m_Os << (*m_SerialComm->GetBuffer())[i];
 	}
 	m_Os << std::endl;
 }
 
 
-void UserInterface::ClearBuffer()
-{
-	m_Buffer.fill(0);
-}
+//void UserInterface::ClearBuffer()
+//{
+//	m_Buffer.fill(0);
+//}
 
 
-std::string UserInterface::BufferToString()
-{
-	std::string bufferString = "";
-
-	for (int i = 0, l = m_Buffer.size(); i < l; i++)
-	{
-		bufferString += m_Buffer[i];
-	}
-	return bufferString;
-}
+//std::string UserInterface::BufferToString()
+//{
+//	std::string bufferString = "";
+//
+//	for (int i = 0, l = m_Buffer.size(); i < l; i++)
+//	{
+//		bufferString += m_Buffer[i];
+//	}
+//	return bufferString;
+//}
 
 
 void UserInterface::HandleInput()
@@ -185,28 +185,23 @@ void UserInterface::HandleInput()
 	{
 
 	case '1': // temp reading
-		m_Serial->SendData(&input, 1);
-
-		LoadRecievedDataToBuffer();
+		m_SerialComm->ReadTemp();
 
 		ResetUI("Current temperature: ");
 		PrintBuffer();
 		break;
 
 	case '2': // Enter new threshold
-		{
-			std::lock_guard<std::mutex> lock(m_Mutex);
-			m_Serial->SendData(&input, 1);
-			ChangeThreshold();
-		}
+		float newThresh;
+		m_Os << "Enter new temperature threshold: ";
+		std::cin >> newThresh;
+		m_SerialComm->ChangeThreshold(newThresh);
 
 		ResetUI("New threshold set!\n");
 		break;
 
 	case '3': // Get Current threshold
-		m_Serial->SendData(&input, 1);
-
-		LoadRecievedDataToBuffer();
+		m_SerialComm->GetCurrentThreshold();
 
 		ResetUI("Current temperature threshold: ");
 		PrintBuffer();
@@ -226,7 +221,7 @@ void UserInterface::HandleInput()
 		break;
 
 	case '0': // Terminate program
-		m_SleepDuration = std::chrono::milliseconds(0);
+		m_SerialComm->Quit();
 		m_Running = false;
 		break;
 
