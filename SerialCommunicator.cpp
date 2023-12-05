@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <ctime>
 #include <sstream>
+#include <stdexcept>
 
 SerialCommunicator::SerialCommunicator() 
 {
@@ -19,6 +20,8 @@ SerialCommunicator::~SerialCommunicator()
 
 void SerialCommunicator::LogEvents()
 {
+	if (this)
+	{
 	// Open log in append mode
 	std::ofstream log(LOG, std::ios_base::app);
 
@@ -37,6 +40,7 @@ void SerialCommunicator::LogEvents()
 	}
 
 	log.close();
+	}
 }
 
 std::string SerialCommunicator::GetCurrentDateTime()

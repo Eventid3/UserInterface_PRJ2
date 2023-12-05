@@ -16,14 +16,15 @@ void logging(UserInterface* ui)
 	while (ui->isRunning())
 	{
 		// Log events
-		ui->GetComm()->LogEvents();
+		if (ui->GetComm())
+			ui->GetComm()->LogEvents();
 	}
 }
 
 
 int main()
 {
-	UserInterface UI(8,9600,std::cout);
+	UserInterface UI(6,9600,std::cout);
 
 	std::thread inputThread(handleInput, &UI);
 	std::thread logThread(logging, &UI);
