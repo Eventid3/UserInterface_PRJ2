@@ -94,7 +94,9 @@ void SerialCommunicator::ChangeThreshold(float newThresh)
 	SendData(&command, 1);
 
 	char buffer[10];
-	
+
+	LoadRecievedDataToBuffer();
+
 	snprintf(buffer, sizeof(buffer), "%f", newThresh);
 	//m_Os << buffer << std::endl;
 	SendData(buffer, 10);

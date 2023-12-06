@@ -96,8 +96,10 @@ void UserInterface::HandleInput()
 		m_Os << "Enter new temperature threshold: ";
 		std::cin >> newThresh;
 		m_SerialComm->ChangeThreshold(newThresh);
+		ResetUI("Threshold set to: ");
 
-		ResetUI("New threshold set!\n");
+		m_SerialComm->LoadRecievedDataToBuffer();
+		PrintBuffer();
 		break;
 
 	case '3': // Get Current threshold
