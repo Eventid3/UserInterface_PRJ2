@@ -32,9 +32,15 @@ void SerialCommunicator::LogEvents()
 		LoadRecievedDataToBuffer();
 	}
 
+	if (BufferToString().empty())
+	{
+		log.close();
+		return;
+	}
+
 	log << GetCurrentDateTime() + ": Temperature: " + BufferToString() << "\n";
 
-	for (auto i = 0; i < m_SleepDuration.count(); ++i)
+	for (auto i = 0; i < m_SleepDuration; ++i)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
@@ -66,7 +72,7 @@ std::string SerialCommunicator::BufferToString()
 {
 	std::string bufferString = "";
 
-	for (int i = 0, l = m_Buffer.size(); i < l; i++)
+	for (size_t i = 0, l = m_Buffer.size(); i < l; i++)
 	{
 		bufferString += m_Buffer[i];
 	}
@@ -117,5 +123,5 @@ void SerialCommunicator::LoadRecievedDataToBuffer()
 
 void SerialCommunicator::Quit()
 {
-	m_SleepDuration = std::chrono::milliseconds(0);
+	m_SleepDuration = 0;
 }

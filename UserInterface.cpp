@@ -66,7 +66,7 @@ void UserInterface::ResetUI(const std::string& message) const
 
 void UserInterface::PrintBuffer()
 {
-	for (int i = 0, l = m_SerialComm->GetBuffer()->size(); i < l; i++)
+	for (size_t i = 0, l = m_SerialComm->GetBuffer()->size(); i < l; i++)
 	{
 		m_Os << (*m_SerialComm->GetBuffer())[i];
 	}

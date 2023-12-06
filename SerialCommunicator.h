@@ -33,5 +33,5 @@ public:
 private:
 	std::array<char, 10> m_Buffer; //buffer for recieved data
 	std::mutex m_Mutex; // mutex for handeling multithreading
-	std::chrono::milliseconds m_SleepDuration{ 1000 }; // time between logs
+	int m_SleepDuration{ 3000 }; // time between logs
 };
