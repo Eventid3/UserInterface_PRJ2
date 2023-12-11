@@ -8,11 +8,11 @@
 #define LOG "log.txt"
 
 
-class SerialCommunicator : public CSerial
+class X10SerialComm : public CSerial
 {
 public:
-	SerialCommunicator();
-	~SerialCommunicator();
+	X10SerialComm();
+	~X10SerialComm();
 
 	void LogEvents();
 
