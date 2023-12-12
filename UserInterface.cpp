@@ -53,7 +53,7 @@ void UserInterface::Reconnect()
 void UserInterface::GetMenu() const
 {
 	/*
-	Priter menuen til brugeren.
+	Printer menuen til brugeren.
 	*/
 	m_Os << "************ USER INTERFACE ************\n\n";
 	m_Os << "OPTIONS:\n";
@@ -80,6 +80,9 @@ void UserInterface::ResetUI(const std::string& message) const
 
 void UserInterface::PrintBuffer()
 {
+	/*
+	Printer bufferen i SerialComm'en ud.
+	*/
 	for (size_t i = 0, l = m_SerialComm->GetBuffer()->size(); i < l; i++)
 	{
 		m_Os << (*m_SerialComm->GetBuffer())[i];
@@ -90,7 +93,7 @@ void UserInterface::PrintBuffer()
 
 void UserInterface::HandleInput()
 {
-	char input{}; // til input fra brugeren
+	char input{}; // Til input fra brugeren
 
 	m_Os << "Input: ";
 	std::cin >> input;
@@ -98,14 +101,14 @@ void UserInterface::HandleInput()
 	switch (input)
 	{
 
-	case '1': // temp reading
+	case '1': // temperatur læsning
 		m_SerialComm->ReadTemp();
 
 		ResetUI("Current temperature: ");
 		PrintBuffer();
 		break;
 
-	case '2': // Enter new threshold
+	case '2': // Indtast en ny tærskelværdi for temperatursensoren | UseCase 2
 		float newThresh;
 		m_Os << "Enter new temperature threshold: ";
 		std::cin >> newThresh;
@@ -116,14 +119,14 @@ void UserInterface::HandleInput()
 		PrintBuffer();
 		break;
 
-	case '3': // Get Current threshold
+	case '3': // Aflæs den nuværende tærskelværdi for temperatursensoren
 		m_SerialComm->GetCurrentThreshold();
 
 		ResetUI("Current temperature threshold: ");
 		PrintBuffer();
 		break;
 
-	case '9': // reconnect serial device
+	case '9': // Reconnect til et UART device
 		int port, baud;
 		m_Os << "Enter new port: ";
 		std::cin >> port;
@@ -136,7 +139,7 @@ void UserInterface::HandleInput()
 
 		break;
 
-	case '0': // Terminate program
+	case '0': // Afslut programmet
 		m_SerialComm->Quit();
 		m_Running = false;
 		break;
